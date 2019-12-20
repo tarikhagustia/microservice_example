@@ -1,0 +1,37 @@
+version: "3"
+
+services: 
+    product:
+        restart: always
+        image: tarikhagustia/microservice-product-example:latest
+        ports: 
+            - 3000:3000
+        environment: 
+            NODE_ENV: production
+            JWT_SECRET: HakunaMatata2019
+            MONGO_URL: mongodb://root:example@mongo:27017/data?authSource=admin
+        depends_on: 
+            - mongo
+
+    mongo:
+        image: mongo
+        ports: 
+            - 27018:27017
+        volumes: 
+            - ./data/mongo:/data/db
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
+            MONGO_INITDB_DATABASE: product
+
+
+    mongo-express:
+        image: mongo-express
+        ports:
+            - 8082:8081
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            ME_CONFIG_MONGODB_ADMINPASSWORD: example
+        
+        depends_on: 
+            - mongo
